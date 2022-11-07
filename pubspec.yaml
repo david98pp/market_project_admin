@@ -41,6 +41,7 @@ dependencies:
   font_awesome_flutter: ^10.2.1
   provider: ^6.0.4
   google_sign_in: ^5.4.2
+  flutter_facebook_auth: ^5.0.4
 
 dev_dependencies:
   analysis_options: any
