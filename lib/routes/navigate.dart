@@ -9,7 +9,6 @@ import '../ui/verify_login_page.dart';
 
 ///get routes
 Map<String, Widget Function(BuildContext)> routes = {
-  '/':(context) =>  const VerifyLoginPage(),
   '/sign-in': (context) => ChangeNotifierProvider(
         create: (_) => SignInProvider(),
         child: const SignInPage(),

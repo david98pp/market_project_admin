@@ -33,28 +33,33 @@ class FirebaseServices {
 
   ///sign out google
   Future<void> signOutFromGoogle() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
+    try {
+      await _googleSignIn.signOut();
+      await _auth.signOut();
+    } on Exception catch (e) {
+      developer.log(e.toString());
+    }
   }
 
   ///getUser
   User? getUser() => _auth.currentUser;
 
   ///listen user changes
-  Stream<User?> firebaseUserChanges() => _auth.userChanges();
+  Stream<User?> get firebaseUserChanges => _auth.authStateChanges();
 
   ///signIn with Facebook
-  Future<UserCredential?> signInWithFacebook() async {
+  Future<bool> signInWithFacebook() async {
     final result = await FacebookAuth.instance.login();
     if (result.status == LoginStatus.success) {
       // Create a credential from the access token
       final credential =
           FacebookAuthProvider.credential(result.accessToken!.token);
+      // Once signed in, get the UserCredential
+      final r = await _auth.signInWithCredential(credential);
 
-      // Once signed in, return the UserCredential
-      return FirebaseAuth.instance.signInWithCredential(credential);
+      return r.user != null ? true : false;
     }
 
-    return null;
+    return false;
   }
 }

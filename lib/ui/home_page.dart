@@ -26,9 +26,6 @@ class HomePage extends StatelessWidget {
             ),
             onPressed: () async {
               await SignInProvider().googleSignOut();
-              if (mounted) {
-                await Navigator.pushReplacementNamed(context, '/sign-in');
-              }
             },
           )
         ],

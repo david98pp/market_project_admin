@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:market_project_admin/routes/navigate.dart';
 import 'package:provider/provider.dart';
 
+import 'core/providers/sign_in_provider.dart';
 import 'core/services/firebase_services.dart';
 import 'firebase_options.dart';
+import 'ui/verify_login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,25 +22,25 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        title: 'Administración de mi tienda',
-        theme: ThemeData(
-          primarySwatch: Colors.amber,
-        ),
-        routes: routes,
-        initialRoute: '/',
-        builder: (context, child) {
-          final mediaQueryData = MediaQuery.of(context);
-          final scale = mediaQueryData.textScaleFactor.clamp(0.85, 1.15);
+  Widget build(BuildContext context) => StreamProvider<User?>.value(
+        value: SignInProvider().firebaseUserChanges,//FirebaseServices
+        initialData: null,
+        builder: (context, snapshot) => MaterialApp(
+          title: 'Administración de mi tienda',
+          theme: ThemeData(
+            primarySwatch: Colors.amber,
+          ),
+          routes: routes,
+          home: const VerifyLoginPage(),
+          builder: (context, child) {
+            final mediaQueryData = MediaQuery.of(context);
+            final scale = mediaQueryData.textScaleFactor.clamp(0.85, 1.15);
 
-          return StreamProvider<User?>.value(
-            value: FirebaseServices().firebaseUserChanges(),
-            initialData: null,
-            builder: (context, snapshot) => MediaQuery(
+            return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: scale),
               child: child!,
-            ),
-          );
-        },
+            );
+          },
+        ),
       );
 }

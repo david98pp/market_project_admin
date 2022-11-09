@@ -13,12 +13,30 @@ class SignInProvider extends ChangeNotifier {
   /// get all methods of Firebase Services
   final firebaseServices = FirebaseServices();
 
+  /// get user changes
+  Stream<User?> get firebaseUserChanges => firebaseServices.firebaseUserChanges;
+
   /// google signInProvider
   Future<bool> googleSignIn() async {
     isLoading = true;
     notifyListeners();
     try {
       return await firebaseServices.signInWithGoogle();
+    } on FirebaseAuthException catch (e) {
+      developer.log(e.message!, name: 'SignIn Provider');
+    }
+    isLoading = false;
+    notifyListeners();
+
+    return false;
+  }
+
+  /// facebook signInProvider
+  Future<bool> facebookSignIn() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      return await firebaseServices.signInWithFacebook();
     } on FirebaseAuthException catch (e) {
       developer.log(e.message!, name: 'SignIn Provider');
     }
@@ -40,5 +58,4 @@ class SignInProvider extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
-
 }
